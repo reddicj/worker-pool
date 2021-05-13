@@ -42,12 +42,12 @@ object TaskTest extends DefaultRunnableSpec {
     expectedTimeout: List[String],
     expectedProgramDuration: FiniteDuration
   ) = for {
-      fork <- runWithTimer(Task.runTasks(tasks, timeout, workers)).fork
-      _ <- TestClock.adjust(ZDuration.fromScala(timeout + 1.second))
-      (results, duration) <- fork.join
-      success = results.filter(_.status == TaskStatus.Successful).map(_.name)
-      failed = results.filter(_.status == TaskStatus.Failed).map(_.name)
-      timeout = results.filter(_.status == TaskStatus.TimedOut).map(_.name)
+    programF <- runWithTimer(Task.runTasks(tasks, timeout, workers)).fork
+    _ <- TestClock.adjust(ZDuration.fromScala(timeout + 1.second))
+    (results, duration) <- programF.join
+    success = results.filter(_.status == TaskStatus.Successful).map(_.name)
+    failed = results.filter(_.status == TaskStatus.Failed).map(_.name)
+    timeout = results.filter(_.status == TaskStatus.TimedOut).map(_.name)
     } yield
       assert((success, failed, timeout))(equalTo((expectedSuccess, expectedFail, expectedTimeout))) &&
       assert(duration)(equalTo(expectedProgramDuration))
