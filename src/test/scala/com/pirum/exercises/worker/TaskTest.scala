@@ -48,9 +48,9 @@ object TaskTest extends DefaultRunnableSpec {
     success = results.filter(_.status == TaskStatus.Successful).map(_.name)
     failed = results.filter(_.status == TaskStatus.Failed).map(_.name)
     timeout = results.filter(_.status == TaskStatus.TimedOut).map(_.name)
-    } yield
-      assert((success, failed, timeout))(equalTo((expectedSuccess, expectedFail, expectedTimeout))) &&
-      assert(duration)(equalTo(expectedProgramDuration))
+  } yield
+    assert((success, failed, timeout))(equalTo((expectedSuccess, expectedFail, expectedTimeout))) &&
+    assert(duration)(equalTo(expectedProgramDuration))
 
   def spec = suite("Task tests")(
 
